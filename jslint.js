@@ -22,8 +22,7 @@
 
     var libfs = require('fs'),
         libpath = require('path'),
-        existsSync = libfs.existsSync || libpath.existsSync,
-        utils = require('../../management/utils');
+        existsSync = libfs.existsSync || libpath.existsSync;
 
 //  ----------------------------------------------------------------------------
 //  Command Root Object
@@ -227,6 +226,94 @@
 //  Internal Helper Functions
 //  ----------------------------------------------------------------------------
 
+    /**
+     * returns a function that determines whether a name is excluded from a list
+     * using a set of firewall style rules.
+     *
+     * Each rule looks like this:
+     *  { pattern: /matchPattern/, include: true|false, type: file|dir|any }
+     *
+     *  If a file matches a rule, it is included or excluded based on the value of
+     *  the include flag If rule is a regexp, it is taken to be { pattern: regexp,
+     *  include: false, type: 'any' } - i.e. it is an exclusion rule.
+     *  The first rule that matches, wins.
+     *  The defaultIsExclude value specifies the behavior when none of the rules
+     *  match (if not specified, the file is included)
+     *
+     * @param {Array} rules set of rules to determine what files and directories are
+     *     copied.
+     * @param {boolean} defaultIsExclude determines what to do when none of the
+     *     rules match.
+     * @return {function} A match function.
+     */
+    function getExclusionMatcher(rules, defaultIsExclude) {
+
+        return function isExcluded(name, ofType) {
+            var index,
+                include,
+                pattern,
+                rule,
+                type,
+                matchedRule,
+                ret = null;
+
+            if (!(ofType === 'file' || ofType === 'dir')) {
+                throw new Error(
+                    'Internal error: file type was not provided, was [' +
+                        ofType + ']'
+                );
+            }
+
+            /* check if there are any rules */
+
+            if (rules.length < 1) {
+                throw new Error('No rules specified');
+            }
+
+            // console.log('checking ' + name + '...');
+            for (index in rules) {
+                // console.log('\t against ' + excludes[regex] + ': ' +
+                //     name.search(excludes[regex]));
+                if (rules.hasOwnProperty(index)) {
+
+                    rule = rules[index];
+
+                    if (rule instanceof RegExp) {
+                        pattern = rule;
+                        include = false;
+                        type = 'any';
+                    } else {
+                        pattern = rule.pattern;
+                        include = !!rule.include;
+                        type = rule.type || 'any';
+                    }
+
+                    if (!(type === 'file' || type === 'dir' || type === 'any')) {
+                        throw new Error('Invalid type for match [' + type + ']');
+                    }
+
+                    if (!(pattern instanceof RegExp)) {
+                        console.log(rule);
+                        throw new Error('Pattern was not a regexp for rule');
+                    }
+
+                    if (name.search(pattern) !== -1 &&
+                            (type === 'any' || type === ofType)) {
+                        matchedRule = rule;
+                        ret = !include;
+                        break;
+                    }
+                }
+            }
+
+            ret = ret === null ? !!defaultIsExclude : ret;
+            //console.log('Match [' + name + '], Exclude= [' + ret + ']');
+            //console.log('Used rule');
+            //console.log(matchedRule);
+            return ret;
+        };
+    }
+
     /*
      * Run JSLint over a single file, writing any errors to the provided output,
      * and returning the number of errors encountered.
@@ -258,7 +345,7 @@
 
         input = libfs.readFileSync(infile);
         if (!input) {
-            utils.error("Failed to open file '" + infile + "'.", Command.usage);
+            console.error("Failed to open file '" + infile + "'.", Command.usage);
             return 0;
         }
         input = input.toString('utf8');
@@ -506,7 +593,7 @@
             // application
             inDir = Command._getAppDir(params[1]);
             if (!inDir) {
-                utils.error('Application not found.', Command.usage);
+                console.error('Application not found.', Command.usage);
                 return;
             }
             outDir = libpath.join(inDir, 'artifacts/jslint');
@@ -519,17 +606,17 @@
             // mojit
             mojit_path = params[1];
             if (!mojit_path) {
-                utils.error('Please specify the path to mojit', Command.usage);
+                console.error('Please specify the path to mojit', Command.usage);
                 return;
             }
             inDir = Command._getMojitDir(mojit_path);
             if (!existsSync(inDir)) {
-                utils.error('Mojit ' + mojit_path + ' not found.',
+                console.error('Mojit ' + mojit_path + ' not found.',
                     Command.usage);
                 return;
             }
             if (!inDir) {
-                utils.error('Mojit ' + mojit_path + ' not found.',
+                console.error('Mojit ' + mojit_path + ' not found.',
                     Command.usage);
                 return;
             }
@@ -541,7 +628,7 @@
                 /\/node_modules$/
             ];
         } else {
-            utils.error('Unrecognized option: ' + params[0], Command.usage);
+            console.error('Unrecognized option: ' + params[0], Command.usage);
             return;
         }
 
@@ -560,8 +647,7 @@
         }
 
         // Process the files with JSLint.
-        errors = Command._processFiles(inDir, outDir,
-            utils.getExclusionMatcher(excludes));
+        errors = Command._processFiles(inDir, outDir, getExclusionMatcher(excludes));
         if (!print && errors) {
             console.log('Lint report: ' + libpath.normalize(outDir));
         }
