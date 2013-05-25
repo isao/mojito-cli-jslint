@@ -24,7 +24,7 @@ function onerr(err) {
     log.error('uh oh.', err);
 }
 
-function ondone(err, count) {
+function ondone(err) {
     pending--;
     if (!pending) {
         if (errors.length) {
