@@ -30,8 +30,12 @@ function ondone(err, count) {
         if (errors.length) {
             log.warn(errors);
         }
-    	callback(err, 'Done');
+        callback(err, 'Done');
     }
+}
+
+function onignored(err, pathname) {
+    log.debug('ignored', pathname);
 }
 
 function tally(pathname, offenses) {
@@ -49,16 +53,15 @@ function tally(pathname, offenses) {
 function lint(err, pathname) {
     pending++;
     fs.readFile(pathname, function onread(err, data) {
-    	var results;
-    	if (!err) {
+        var results;
+        if (!err) {
             results = jslint(data.toString());
-            log.debug(results.ok ? '✔' : '✖', pathname);
             if (!results.ok) {
-                log.warn('✖ %d error%s in %s', results.errors.length, results.errors.length > 1 ? 's' : '', pathname);
+                log.error('✖ %d error%s in %s', results.errors.length, results.errors.length > 1 ? 's' : '', pathname);
                 tally(pathname, results.errors);
-            }    	
-    	}
-        ondone(err);        
+            }
+        }
+        ondone(err);
     });
 }
 
@@ -77,6 +80,7 @@ function exec(sources, env, cb) {
     pending = 1;
 
     scan.on('.js', lint);
+    scan.on('ignored', onignored);
     scan.on('error', onerr);
     scan.on('done', ondone);
     scan.relatively(sources);
@@ -96,7 +100,7 @@ function main(env, cb) {
         env.opts.directory = resolve(env.cwd, 'artifacts/jslint');
     }
 
-    //
+    // BC
     switch (type.toLowerCase()) {
     case 'app':
         break;
@@ -113,7 +117,7 @@ function main(env, cb) {
 
     // directories to exclude
     env.opts.exclude = exclude.concat(config.exclude[type]);
-        
+
     exec(sources, env, cb);
 }
 
