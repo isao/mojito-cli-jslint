@@ -20,39 +20,51 @@ var fs = require('fs'),
     callback;
 
 
-function lint(err, pathname) {
-    var results = jslint(fs.readFileSync(pathname, {encoding: 'utf8'})),
-        record;
-    
-    if (!results.ok) {
-        results.errors.forEach(function(msg) {
-        	errors.push({
-        		file: pathname,
-        		line: msg.line,
-        		char: msg.character,
-        		reason: msg.reason,
-        		evidence: msg.evidence
-        	});
-        });
-    }
-    
-    log.info(pathname);
-}
-
 function onerr(err) {
     log.error('uh oh.', err);
 }
 
 function ondone(err, count) {
-    if (errors.length) {
-    	log.info(errors);
+    pending--;
+    if (!pending) {
+        if (errors.length) {
+            log.warn(errors);
+        }
+    	callback(err, 'Done');
     }
-    log.info('done');
+}
+
+function tally(pathname, offenses) {
+    offenses.forEach(function(o) {
+        errors.push({
+            file: pathname,
+            line: o.line,
+            col: o.character,
+            reason: o.reason,
+            evidence: o.evidence
+        });
+    });
+}
+
+function lint(err, pathname) {
+    pending++;
+    fs.readFile(pathname, function onread(err, data) {
+    	var results;
+    	if (!err) {
+            results = jslint(data.toString());
+            log.debug(results.ok ? '✔' : '✖', pathname);
+            if (!results.ok) {
+                log.warn('✖ %d error%s in %s', results.errors.length, results.errors.length > 1 ? 's' : '', pathname);
+                tally(pathname, results.errors);
+            }    	
+    	}
+        ondone(err);        
+    });
 }
 
 function isJs(err, pathname, stat) {
     if (stat.isFile() && ('.js' === pathname.slice(-3))) {
-    	return 'js';
+        return 'js';
     }
 }
 
@@ -99,7 +111,7 @@ function main(env, cb) {
 
     // directories to exclude
     env.opts.exclude = exclude.concat(config.exclude[type]);
-
+        
     exec(sources, env, cb);
 }
 
