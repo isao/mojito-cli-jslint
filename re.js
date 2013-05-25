@@ -27,7 +27,7 @@ function onerr(err) {
 function ondone(err) {
     pending--;
     if (!pending) {
-        if (errors.length) {
+        if (Object.keys(errors).length) {
             log.warn(errors);
         }
         callback(err, 'Done');
@@ -40,12 +40,11 @@ function onignored(err, pathname) {
 
 function tally(pathname, offenses) {
     offenses.forEach(function(o) {
-        errors.push({
-            file: pathname,
-            line: o.line,
-            col: o.character,
-            reason: o.reason,
-            evidence: o.evidence
+        if (!errors[pathname]) {
+            errors[pathname] = [];
+        }
+        errors[pathname].push({
+            line: o.line, col: o.character, msg: o.reason, evidence: o.evidence
         });
     });
 }
@@ -76,7 +75,7 @@ function exec(sources, env, cb) {
 
     // up-scope state
     callback = cb || log.info;
-    errors = [];
+    errors = {};
     pending = 1;
 
     scan.on('.js', lint);
