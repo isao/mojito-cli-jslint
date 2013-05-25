@@ -64,7 +64,7 @@ function lint(err, pathname) {
 
 function isJs(err, pathname, stat) {
     if (stat.isFile() && ('.js' === pathname.slice(-3))) {
-        return 'js';
+        return '.js';
     }
 }
 
@@ -76,7 +76,7 @@ function exec(sources, env, cb) {
     errors = [];
     pending = 1;
 
-    scan.on('js', lint);
+    scan.on('.js', lint);
     scan.on('error', onerr);
     scan.on('done', ondone);
     scan.relatively(sources);
@@ -99,10 +99,12 @@ function main(env, cb) {
     //
     switch (type.toLowerCase()) {
     case 'app':
-    case 'mojito':
         break;
     case 'mojit':
-        // convert mojit to source path(s)
+        // todo: convert mojit to source path(s)
+        break;
+    case 'mojito':
+        sources = [env.mojito.path];
         break;
     default:
         sources.unshift(type || '.');
