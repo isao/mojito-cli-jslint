@@ -2,9 +2,11 @@
   "name": "mojito-cli-jslint",
   "version": "0.0.1",
   "description": "",
-  "main": "jslint.js",
+  "main": "re.js",
   "dependencies": {
-    "jslint": "~0.1.9"
+    "jslint": "~0.1.9",
+    "npmlog": "0.0.2",
+    "scanfs": "~0.1.0"
   },
   "devDependencies": {
     "tap": "~0.4.1"
