@@ -5,85 +5,12 @@
  */
 'use strict';
 
-var fs = require('fs'),
-    resolve = require('path').resolve,
-    Scan = require('scanfs'),
-
-    jslint = require('jslint/lib/linter').lint,
+var lintifier = require('./lib/lintifier'),
+    reporter = require('./lib/reporter'),
     config = require('./config'),
     log = require('./lib/log'),
-    usage,
+    usage;
 
-    // state
-    pending,
-    errors,
-    callback;
-
-
-function onerr(err) {
-    log.error('uh oh.', err);
-}
-
-function ondone(err) {
-    pending--;
-    if (!pending) {
-        if (Object.keys(errors).length) {
-            log.warn(errors);
-        }
-        callback(err, 'Done');
-    }
-}
-
-function onignored(err, pathname) {
-    log.debug('ignored', pathname);
-}
-
-function tally(pathname, offenses) {
-    offenses.forEach(function(o) {
-        if (!errors[pathname]) {
-            errors[pathname] = [];
-        }
-        errors[pathname].push({
-            line: o.line, col: o.character, msg: o.reason, evidence: o.evidence
-        });
-    });
-}
-
-function lint(err, pathname) {
-    pending++;
-    fs.readFile(pathname, function onread(err, data) {
-        var results;
-        if (!err) {
-            results = jslint(data.toString());
-            if (!results.ok) {
-                log.error('✖ %d error%s in %s', results.errors.length, results.errors.length > 1 ? 's' : '', pathname);
-                tally(pathname, results.errors);
-            }
-        }
-        ondone(err);
-    });
-}
-
-function isJs(err, pathname, stat) {
-    if (stat.isFile() && ('.js' === pathname.slice(-3))) {
-        return '.js';
-    }
-}
-
-function exec(sources, env, cb) {
-    var scan = new Scan(env.opts.exclude, isJs);
-
-    // up-scope state
-    callback = cb || log.info;
-    errors = {};
-    pending = 1;
-
-    scan.on('.js', lint);
-    scan.on('ignored', onignored);
-    scan.on('error', onerr);
-    scan.on('done', ondone);
-    scan.relatively(sources);
-}
 
 function main(env, cb) {
     var exclude = config.exclude.always.concat(env.opts.exclude || []),
@@ -92,11 +19,6 @@ function main(env, cb) {
 
     if (env.opts.loglevel) {
         log.level = env.opts.loglevel;
-    }
-
-    // output dir
-    if (!env.opts.directory) {
-        env.opts.directory = resolve(env.cwd, 'artifacts/jslint');
     }
 
     // BC
@@ -117,7 +39,8 @@ function main(env, cb) {
     // directories to exclude
     env.opts.exclude = exclude.concat(config.exclude[type]);
 
-    exec(sources, env, cb);
+    // exec
+    lintifier(sources, env.opts.exclude, reporter(env, cb));
 }
 
 
