@@ -32,6 +32,7 @@ function main(env, cb) {
         sources = [env.mojito.path];
         break;
     default:
+        // no known type provided, assume pathname
         sources.unshift(type || '.');
         type = 'app';
     }
