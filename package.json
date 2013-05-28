@@ -5,7 +5,9 @@
   "main": "re.js",
   "dependencies": {
     "jslint": "~0.1.9",
+    "mkdirp": "~0.3.5",
     "npmlog": "0.0.2",
+    "rimraf": "~2.1.4",
     "scanfs": "~0.1.0"
   },
   "devDependencies": {
