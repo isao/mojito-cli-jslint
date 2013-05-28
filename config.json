@@ -1,5 +1,6 @@
 {
-    "options": {
+    "lintopts": {
+        "continue": true,
         "node": true,
         "predef": [
             "exports",
