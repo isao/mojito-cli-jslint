@@ -18,7 +18,7 @@
     "npm": ">1.1"
   },
   "scripts": {
-    "lint": "jshint {.,lib}/*.js",
+    "lint": "jslint {.,lib}/*.js",
     "test": "node tests",
     "cover": "istanbul cover --dir artifacts/coverage tests",
     "clean": "git clean -dfx {.,tests}/artifacts"
