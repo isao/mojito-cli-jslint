@@ -30,8 +30,13 @@ function main(env, cb) {
         // todo: convert mojit to source path(s)
         break;
     case 'mojito':
+        if (!env.mojito) {
+        	cb('Mojito is not avalaible. Please install it.');
+        	return;
+        }
         sources = [env.mojito.path];
         break;
+
     default:
         // no known type provided, assume pathname
         sources.unshift(type || env.cwd);
