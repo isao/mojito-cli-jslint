@@ -34,7 +34,7 @@ function main(env, cb) {
         break;
     default:
         // no known type provided, assume pathname
-        sources.unshift(type || '.');
+        sources.unshift(type || env.cwd);
         type = 'app';
     }
 
