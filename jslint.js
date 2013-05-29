@@ -15,7 +15,8 @@ var lintifier = require('./lib/lintifier'),
 function main(env, cb) {
     var exclude = config.exclude.always.concat(env.opts.exclude || []),
         type = env.args.shift() || '',
-        sources = env.args.concat();
+        sources = env.args.concat(),
+        output = reporter(env, cb); // to format & output lint data
 
     if (env.opts.loglevel) {
         log.level = env.opts.loglevel;
@@ -41,7 +42,7 @@ function main(env, cb) {
     env.opts.exclude = exclude.concat(config.exclude[type]);
 
     // exec
-    lintifier(sources, env.opts.exclude, reporter(env, cb));
+    lintifier(sources, env.opts.exclude, output);
 }
 
 
