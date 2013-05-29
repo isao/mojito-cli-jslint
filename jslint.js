@@ -39,10 +39,10 @@ function main(env, cb) {
     }
 
     // directories to exclude
-    env.opts.exclude = exclude.concat(config.exclude[type]);
+    exclude = exclude.concat(config.exclude[type]);
 
     // exec
-    lintifier(sources, env.opts.exclude, output);
+    lintifier(sources, exclude, output);
 }
 
 
