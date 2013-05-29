@@ -2,7 +2,7 @@
   "name": "mojito-cli-jslint",
   "version": "0.0.1",
   "description": "",
-  "main": "re.js",
+  "main": "jslint.js",
   "dependencies": {
     "jslint": "~0.1.9",
     "mkdirp": "~0.3.5",
