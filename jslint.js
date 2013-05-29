@@ -67,7 +67,6 @@ module.exports.usage = usage = [
     '',
     '  Run jslint on mojits/Bar',
     '    mojito jslint mojit mojits/Bar',
-    '    mojito jslint mojit Bar',
     '',
     '  Run jslint on the mojito framework',
     '    mojito jslint mojito'
