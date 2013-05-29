@@ -18,7 +18,8 @@
             "tests"
         ],
         "mojito": [
-            "mojito"
+            "docs",
+            "examples"
         ],
         "app": [],
         "mojit": []
