@@ -16,7 +16,7 @@ function main(env, cb) {
     var exclude = config.exclude.always.concat(env.opts.exclude || []),
         type = env.args.shift() || '',
         sources = env.args.concat(),
-        output = reporter(env, cb); // to format & output lint data
+        output = reporter(env, console.error, cb); // format & output lint data
 
     if (env.opts.loglevel) {
         log.level = env.opts.loglevel;
