@@ -28,7 +28,6 @@ test('zzz', function(t) {
             }]
         };
 
-
     t.plan(3);
     rep(offenses, cb, 'ohhai');
 });
@@ -68,7 +67,6 @@ test('yyy', function(t) {
             ],
         };
 
-
     t.plan(2);
     rep(offenses, 'ohhai');
 });
@@ -84,7 +82,6 @@ test('reporter gets an error string', function(t) {
     var env = {opts:{}, cwd:__dirname},
         rep = fn(env, function(){}, cb),
         offenses = 'ohnoes.';
-
 
     t.plan(2);
     rep(offenses, 'ohhai');
