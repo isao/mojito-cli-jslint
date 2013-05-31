@@ -70,7 +70,7 @@ test('jslint mojito (missing mojito)', function(t) {
     env.mojito = null;
 
     function cb(err, msg) {
-        t.equal(err, 'Mojito is not avalaible. Please install it.');
+        t.equal(err, 'Mojito is not available. Please install it.');
     }
     
     t.plan(1);

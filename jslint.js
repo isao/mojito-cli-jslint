@@ -30,7 +30,7 @@ function main(env, cb) {
         break;
     case 'mojito':
         if (!env.mojito) {
-            cb('Mojito is not avalaible. Please install it.');
+            cb('Mojito is not available. Please install it.');
             return;
         }
         sources = [env.mojito.path];
