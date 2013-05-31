@@ -36,7 +36,7 @@ test('zzz', function(t) {
 test('yyy', function(t) {
 
     function cb(err, msg) {
-        t.equal(err, 'Total of 2 errors found in 1 file.');
+        t.equal(err, 'Total of 3 errors found in 2 files.');
         t.equal(msg, undefined);
     }
 
