@@ -8,8 +8,7 @@
 var lintifier = require('./lib/lintifier'),
     reporter = require('./lib/reporter'),
     config = require('./config'),
-    log = require('./lib/log'),
-    usage;
+    log = require('./lib/log');
 
 
 function main(env, cb) {
@@ -53,7 +52,7 @@ function main(env, cb) {
 
 module.exports = main;
 
-module.exports.usage = usage = [
+module.exports.usage = [
     'Usage: mojito jslint [options] [type] [source]',
     '  type    "app", "mojit", or "mojito"',
     '  source  mojit name or path',
