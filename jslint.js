@@ -42,7 +42,7 @@ function main(env, cb) {
         type = 'app';
     }
 
-    // directories to exclude
+    // add type-specific exclusions, if any
     exclude = exclude.concat(config.exclude[type]);
 
     // exec
