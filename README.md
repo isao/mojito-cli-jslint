@@ -1,6 +1,6 @@
 mojito-jslint
 ==========
-[![Build Status](https://travis-ci.org/isao/mojito-cli-jslint.png?branch=rewrite)](https://travis-ci.org/isao/mojito-cli-jslint)
+[![Build Status](https://travis-ci.org/yahoo/mojito-cli-jslint.png?branch=rewrite)](https://travis-ci.org/yahoo/mojito-cli-jslint)
 
 This package provides the `jslint` command for the [`mojito-cli`](https://github.com/yahoo/mojito-cli). Install it with `npm install -g mojito-cli`.
 
