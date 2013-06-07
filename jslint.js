@@ -81,7 +81,7 @@ module.exports.usage = [
 ].join('\n');
 
 module.exports.options = [
-    {shortName: 'd', hasValue: true, longName: 'directory'},
-    {shortName: 'e', hasValue: [String, Array],  longName: 'exclude'},
-    {shortName: 'p', hasValue: false, longName: 'print'}
+    {shortName: 'd', longName: 'directory', hasValue: true},
+    {shortName: 'e', longName: 'exclude', hasValue: [String, Array]},
+    {shortName: 'p', longName: 'print', hasValue: false}
 ];
