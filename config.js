@@ -10,25 +10,25 @@ module.exports = {
     },
     "exclude": {
         "always": [
-            /(^|\/)\.git$/,
-            /(^|\/)\.svn$/
+            /(^|[\/\\])\.git$/,
+            /(^|[\/\\])\.svn$/
         ],
         "mojito": [
-            /(^|\/)artifacts$/,
-            /(^|\/)docs$/,
-            /(^|\/)examples$/,
-            /(^|\/)mojito\/node_modules$/,
-            /(^|\/)tests$/
+            /(^|[\/\\])artifacts$/,
+            /(^|[\/\\])docs$/,
+            /(^|[\/\\])examples$/,
+            /(^|[\/\\])mojito[\/\\]node_modules$/,
+            /(^|[\/\\])tests$/
         ],
         "app": [
-            /(^|\/)artifacts$/,
-            /(^|\/)node_modules$/,
-            /(^|\/)tests$/
+            /(^|[\/\\])artifacts$/,
+            /(^|[\/\\])node_modules$/,
+            /(^|[\/\\])tests$/
         ],
         "mojit": [
-            /(^|\/)artifacts$/,
-            /(^|\/)node_modules$/,
-            /(^|\/)tests$/
+            /(^|[\/\\])artifacts$/,
+            /(^|[\/\\])node_modules$/,
+            /(^|[\/\\])tests$/
         ]
     }
 };
