@@ -37,6 +37,9 @@ function main(env, cb) {
     default:
         // no known type provided, assume pathname
         sources.unshift(type || env.cwd);
+        if (env.app && env.app.dependencies && env.app.dependencies.mojito) {
+        	type = 'app';
+        }
     }
 
     // add type-specific exclusions, if any
