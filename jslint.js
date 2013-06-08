@@ -53,7 +53,7 @@ module.exports = main;
 module.exports.usage = [
     'Usage: mojito jslint [options] [type] [source]',
     '  type    "app", "mojit", or "mojito"',
-    '  source  mojit name or path',
+    '  source  path(s) (required for type "mojit")',
     '',
     'Options:',
     '  --directory          directory to save results. Default is artifacts/jslint',
