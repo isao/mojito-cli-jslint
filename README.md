@@ -9,7 +9,7 @@ Usage
 
 Scan files or paths for javascript files, and check their contents with [jslint](http://www.jslint.com/):
 
-    mojito jslint [options] [app|mojit|mojito] [path(s)]
+    mojito jslint [options] [app|mojit] [path(s)]
 
 The default jslint options used, and the patterns of files or directories that will be ignored, are listed in `config.js`.
 
